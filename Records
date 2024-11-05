@@ -1,0 +1,73 @@
+-- Database: Records
+
+-- DROP DATABASE IF EXISTS "Records";
+
+CREATE DATABASE "Records"
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Russian_Russia.1251'
+    LC_CTYPE = 'Russian_Russia.1251'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+
+-- SCHEMA: public
+
+-- DROP SCHEMA IF EXISTS public ;
+
+CREATE SCHEMA IF NOT EXISTS public
+    AUTHORIZATION pg_database_owner;
+
+COMMENT ON SCHEMA public
+    IS 'standard public schema';
+
+GRANT USAGE ON SCHEMA public TO PUBLIC;
+
+GRANT ALL ON SCHEMA public TO pg_database_owner;
+
+
+-- Table: public.categories
+
+-- DROP TABLE IF EXISTS public.categories;
+
+CREATE TABLE IF NOT EXISTS public.categories
+(
+    id_category integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    category_name character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT categories_pkey PRIMARY KEY (id_category)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.categories
+    OWNER to postgres;
+
+COMMENT ON TABLE public.categories
+    IS 'Категории операций';
+
+
+-- Table: public.records
+
+-- DROP TABLE IF EXISTS public.records;
+
+CREATE TABLE IF NOT EXISTS public.records
+(
+    id_operation integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    operation boolean NOT NULL,
+    id_category integer,
+    date_operation date NOT NULL,
+    total numeric(8,2) NOT NULL,
+    CONSTRAINT records_pkey PRIMARY KEY (id_operation),
+    CONSTRAINT records_total_check CHECK (total > 0::numeric)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.records
+    OWNER to postgres;
+
+COMMENT ON TABLE public.records
+    IS 'Записи операций';
